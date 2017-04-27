@@ -1,0 +1,44 @@
+plugins {
+    id "net.ltgt.apt" version "0.5"
+}
+
+group 'com.emailcrawling'
+version '1.0-SNAPSHOT'
+
+allprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    tasks.withType(JavaCompile) {
+        options.incremental = false
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+dependencies {
+    compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.2'
+    compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.9'
+    compile group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: '2.0.0'
+    compile group: 'com.google.dagger', name: 'dagger', version: '2.10'
+    apt group: 'com.google.dagger', name: 'dagger-compiler', version: '2.10'
+    compile group: 'org.nibor.autolink', name: 'autolink', version: '0.6.0'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.22'
+    compile group: 'log4j', name: 'log4j', version: '1.2.16'
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.+'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.6.2'
+}
+
+task run (type: JavaExec, dependsOn: classes){
+    if(project.hasProperty('myargs')){
+        args(myargs)
+    }
+    description = "Crawling..."
+    main = "com.emailcrawling.app.App"
+    classpath = sourceSets.main.runtimeClasspath
+}

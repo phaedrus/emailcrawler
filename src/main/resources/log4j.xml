@@ -12,19 +12,19 @@
     </appender>
 
     <logger name="com.emailcrawling">
-        <level value="INFO"/>
+        <level value="OFF"/>
     </logger>
 
     <logger name="org.apache.http.client.protocol">
-        <level value="ERROR"/>
+        <level value="OFF"/>
     </logger>
     
     <logger name="edu.uci.ics">
-        <level value="ERROR"/>
+        <level value="OFF"/>
     </logger>
 
     <root>
-        <level value="WARN"/>
+        <level value="OFF"/>
         <appender-ref ref="CONSOLE"/>
     </root>
 

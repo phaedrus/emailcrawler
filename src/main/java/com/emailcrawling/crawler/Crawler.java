@@ -19,17 +19,21 @@ import javax.inject.Named;
 class Crawler extends WebCrawler {
   private static final String MEDIA_EXTENSION_REGEX =
           ".*(\\.(css|js|bmp|gif|jpe?g|png|ico|tiff?|mid|mp2|mp3|mp4|"
-  +"wav|avi|mov|mpeg|ram|m4v|pdf|rm|smil|wmv|swf|wma|zip|rar|gz))";
+                  +"wav|avi|mov|mpeg|ram|m4v|pdf|rm|smil|wmv|swf|wma|zip|rar|gz))";
   private static final Pattern MEDIA_FILE_PATTERN = Pattern.compile(MEDIA_EXTENSION_REGEX + "$");
 
   private final PagePublisher pagePublisher;
   private final String crawlDomain;
+  private final String wwwCrawlDomain;
+  private final String webCrawlDomain;
 
   @Inject
   Crawler(@Named("crawl-domain") String crawlDomain,
           PagePublisher pagePublisher) {
     this.pagePublisher = pagePublisher;
     this.crawlDomain = crawlDomain;
+    this.wwwCrawlDomain = "www." + crawlDomain;
+    this.webCrawlDomain = "web." + crawlDomain;
   }
 
   @Override
@@ -39,11 +43,12 @@ class Crawler extends WebCrawler {
   }
 
   private boolean isMediaUrl(final String url) {
-    return MEDIA_FILE_PATTERN.matcher(url).matches() || url.contains("/img/") || url.contains("/css/");
+    return MEDIA_FILE_PATTERN.matcher(url).matches();
   }
 
   private boolean matchesDomain(WebURL url) {
-    return url.getDomain().endsWith(crawlDomain);
+    String subDomain = (url.getSubDomain() + "." + url.getDomain()).toLowerCase();
+    return subDomain.equals(crawlDomain) || subDomain.equals(webCrawlDomain) || subDomain.equals(wwwCrawlDomain);
   }
 
   @Override

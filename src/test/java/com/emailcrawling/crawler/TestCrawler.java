@@ -50,6 +50,7 @@ public class TestCrawler {
   public void testShouldVisitInputDomain() {
     when(webURL.getURL()).thenReturn("http://google.com/interestingstuff");
     when(webURL.getDomain()).thenReturn("google.com");
+    when(webURL.getSubDomain()).thenReturn("www");
 
     assertThat(crawler.shouldVisit(page, webURL)).isTrue();
   }
@@ -59,6 +60,25 @@ public class TestCrawler {
   public void testShouldNotVisitOtherDomains() {
     when(webURL.getURL()).thenReturn("https://www.yahoo.com/search");
     when(webURL.getDomain()).thenReturn("yahoo.com");
+    when(webURL.getSubDomain()).thenReturn("www");
+
+    assertThat(crawler.shouldVisit(page, webURL)).isFalse();
+  }
+
+  @Test
+  public void testShouldVisitInputWebDomain() {
+    when(webURL.getURL()).thenReturn("https://web.google.com/search");
+    when(webURL.getDomain()).thenReturn("google.com");
+    when(webURL.getSubDomain()).thenReturn("web");
+
+    assertThat(crawler.shouldVisit(page, webURL)).isTrue();
+  }
+
+  @Test
+  public void testShouldNotVisitSubDomainMismatch() {
+    when(webURL.getURL()).thenReturn("https://web.google.com/search");
+    when(webURL.getDomain()).thenReturn("google.com");
+    when(webURL.getSubDomain()).thenReturn("blog");
 
     assertThat(crawler.shouldVisit(page, webURL)).isFalse();
   }
